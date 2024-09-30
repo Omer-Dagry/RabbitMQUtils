@@ -1,0 +1,39 @@
+[project.urls]
+Homepage = "https://github.com/Omer-Dagry/RabbitMQUtils"
+Issues = "https://github.com/Omer-Dagry/RabbitMQUtils/issues"
+
+[project]
+name = "aio-rabbitmq-utils"
+version = "1.0.1"
+description = "A package for async communication with RabbitMQ"
+keywords = ["rabbitmq", "pika", "aio", "async"]
+
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Omer Dagry", email = "omerdagry@gmail.com" },
+]
+
+requires-python = ">=3.10"
+classifiers = [
+    "Operating System :: OS Independent",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["aio_rabbitmq_utils"]
+exclude = []
+namespaces = false
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
