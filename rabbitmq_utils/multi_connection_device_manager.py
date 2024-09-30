@@ -51,26 +51,22 @@ class RabbitMQMultiConnectionDeviceManager(RabbitMQDeviceManager, ABC):
     async def channel(self) -> Pool[AbstractRobustChannel]:
         return await super().channel
 
-    async def _create_connection(self):
-        async def inner_create_connection():
-            return await connect_robust(
-                make_url(
-                    host=random.choice(self._hosts),
-                    port=self._port,
-                    login=self._user,
-                    password=self._password,
-                    virtualhost=self._vhost,
-                    ssl=self._use_ssl,
-                ),
-            )
-
+    async def _create_connection(self) -> None:
         self._connection = Pool(
-            inner_create_connection,
+            connect_robust,
+            make_url(
+                host=random.choice(self._hosts),
+                port=self._port,
+                login=self._user,
+                password=self._password,
+                virtualhost=self._vhost,
+                ssl=self._use_ssl,
+            ),
             max_size=self._max_connections
         )
 
-    async def _create_channel(self):
-        async def inner_create_channel():
+    async def _create_channel(self) -> None:
+        async def inner_create_channel() -> AbstractRobustChannel:
             async with (await self.connection).acquire() as connection:
                 channel = await connection.channel(
                     publisher_confirms=self._publisher_confirms,
@@ -85,13 +81,13 @@ class RabbitMQMultiConnectionDeviceManager(RabbitMQDeviceManager, ABC):
             max_size=self._max_channels
         )
 
-    async def _close_connection(self):
+    async def _close_connection(self) -> None:
         try:
             await self._connection.close()
         except:
             pass
 
-    async def _close_channel(self):
+    async def _close_channel(self) -> None:
         try:
             await self._channel.close()
         except:

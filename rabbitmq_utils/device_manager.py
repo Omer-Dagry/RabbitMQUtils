@@ -57,13 +57,13 @@ class RabbitMQDeviceManager(RabbitMQBaseDeviceManager, ABC):
             await self._reconnect()
         return self._channel
 
-    async def _reconnect(self):
+    async def _reconnect(self) -> None:
         if self._connection is None or self._connection.is_closed:
             await self._create_connection()
-        if self._connection is None or self._connection.is_closed:
+        if self._channel is None or self._channel.is_closed:
             await self._create_channel()
 
-    async def _create_connection(self):
+    async def _create_connection(self) -> None:
         self._connection = await connect_robust(
             make_url(
                 host=random.choice(self._hosts),
@@ -75,7 +75,7 @@ class RabbitMQDeviceManager(RabbitMQBaseDeviceManager, ABC):
             ),
         )
 
-    async def _create_channel(self):
+    async def _create_channel(self) -> None:
         self._channel = await self._connection.channel(
             self._publisher_confirms,
         )
@@ -83,13 +83,13 @@ class RabbitMQDeviceManager(RabbitMQBaseDeviceManager, ABC):
             **self._channel_qos_kwargs,
         )
 
-    async def _close_connection(self):
+    async def _close_connection(self) -> None:
         try:
             await self._connection.close()
         except:
             pass
 
-    async def _close_channel(self):
+    async def _close_channel(self) -> None:
         try:
             await self._channel.close()
         except:

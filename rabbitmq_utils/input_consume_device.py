@@ -52,3 +52,4 @@ class RabbitMQInputConsumeDevice(RabbitMQBaseInputDevice):
                 await transaction.rollback()
             except:
                 pass
+        self._inner_queue = []
