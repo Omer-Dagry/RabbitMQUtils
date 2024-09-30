@@ -4,8 +4,8 @@ Issues = "https://github.com/Omer-Dagry/RabbitMQUtils/issues"
 
 [project]
 name = "rabbitmq_utils"
-version = "0.0.1"
-description = "A package for communicating with RabbitMQ"
+version = "1.0.0"
+description = "A package for async communication with RabbitMQ"
 keywords = ["rabbitmq", "pika", "aio", "async"]
 
 readme = "README.md"
@@ -23,9 +23,10 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 
-dependencies = [
-    "aio-pika==9.*",
-]
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
 
 [tool.setuptools.packages.find]
 where = ["rabbitmq_utils"]
@@ -34,5 +35,5 @@ exclude = []
 namespaces = false
 
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
