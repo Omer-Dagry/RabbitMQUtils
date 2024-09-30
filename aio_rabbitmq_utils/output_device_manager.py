@@ -1,16 +1,15 @@
-from typing import Dict, Any, List
+from typing import List, Dict, Any
 
-from pamqp.common import Arguments
 from pamqp.constants import DEFAULT_PORT
 
-from rabbitmq_utils.base_device_manager import RabbitMQBaseInputDeviceManager
-from rabbitmq_utils.device_manager import RabbitMQDeviceManager
-from rabbitmq_utils.input_consume_device import RabbitMQInputConsumeDevice
+from .base_device_manager import RabbitMQBaseOutputDeviceManager
+from .device_manager import RabbitMQDeviceManager
+from .output_device import RabbitMQOutputDevice
 
 
-class RabbitMQConsumeInputDeviceManager(
+class RabbitMQOutputDeviceManager(
     RabbitMQDeviceManager,
-    RabbitMQBaseInputDeviceManager,
+    RabbitMQBaseOutputDeviceManager,
 ):
     def __init__(
             self,
@@ -18,7 +17,8 @@ class RabbitMQConsumeInputDeviceManager(
             user: str,
             password: str,
             vhost: str,
-            consumer_arguments: Arguments = None,
+            publisher_confirms: bool,
+            exchange_name: str,
             channel_qos_kwargs: Dict[str, Any] = None,
             use_transaction: bool = False,
             use_ssl: bool = False,
@@ -29,21 +29,20 @@ class RabbitMQConsumeInputDeviceManager(
             user=user,
             password=password,
             vhost=vhost,
-            publisher_confirms=False,
+            publisher_confirms=publisher_confirms,
             channel_qos_kwargs=channel_qos_kwargs,
             use_transaction=use_transaction,
             use_ssl=use_ssl,
             port=port,
         )
-        self._consumer_arguments = consumer_arguments
+        self._exchange_name = exchange_name
 
     async def get_device(
             self,
             device_name: str,
-    ) -> RabbitMQInputConsumeDevice:
-        return RabbitMQInputConsumeDevice(
+    ) -> RabbitMQOutputDevice:
+        return RabbitMQOutputDevice(
             self,
             device_name,
-            self._use_transaction,
-            self._consumer_arguments,
+            self._exchange_name
         )

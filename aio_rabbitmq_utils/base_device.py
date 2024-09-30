@@ -4,7 +4,7 @@ from typing import Optional, Tuple
 
 from aio_pika.abc import HeadersType, DeliveryMode
 
-from rabbitmq_utils.transaction import BaseTransaction
+from .transaction import BaseTransaction
 
 
 class RabbitMQBaseDevice(ABC):

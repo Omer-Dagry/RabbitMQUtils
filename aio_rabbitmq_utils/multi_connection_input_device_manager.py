@@ -2,9 +2,9 @@ from typing import Dict, Any, List
 
 from pamqp.constants import DEFAULT_PORT
 
-from rabbitmq_utils.base_device_manager import RabbitMQBaseInputDeviceManager
-from rabbitmq_utils.input_device import RabbitMQInputBasicGetDevice
-from rabbitmq_utils.multi_connection_device_manager import RabbitMQMultiConnectionDeviceManager
+from .base_device_manager import RabbitMQBaseInputDeviceManager
+from .input_device import RabbitMQInputBasicGetDevice
+from .multi_connection_device_manager import RabbitMQMultiConnectionDeviceManager
 
 
 class RabbitMQMultiConnectionBasicGetInputDeviceManager(

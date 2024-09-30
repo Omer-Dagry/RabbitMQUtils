@@ -3,9 +3,9 @@ from typing import Optional, Tuple
 
 from aio_pika.abc import HeadersType
 
-from rabbitmq_utils.base_device import RabbitMQBaseInputDevice
-from rabbitmq_utils.multi_connection_device_manager import RabbitMQMultiConnectionDeviceManager
-from rabbitmq_utils.transaction import BaseTransaction, RabbitMQIncomingMessageTransaction, EmptyTransaction
+from .base_device import RabbitMQBaseInputDevice
+from .multi_connection_device_manager import RabbitMQMultiConnectionDeviceManager
+from .transaction import BaseTransaction, RabbitMQIncomingMessageTransaction, EmptyTransaction
 
 
 class RabbitMQInputBasicGetDevice(RabbitMQBaseInputDevice):

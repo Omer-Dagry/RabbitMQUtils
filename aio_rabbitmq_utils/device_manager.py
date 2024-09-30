@@ -7,7 +7,7 @@ from aio_pika.abc import AbstractRobustConnection, AbstractRobustChannel
 from aio_pika.connection import make_url
 from pamqp.constants import DEFAULT_PORT
 
-from rabbitmq_utils.base_device_manager import RabbitMQBaseDeviceManager
+from .base_device_manager import RabbitMQBaseDeviceManager
 
 
 class RabbitMQDeviceManager(RabbitMQBaseDeviceManager, ABC):

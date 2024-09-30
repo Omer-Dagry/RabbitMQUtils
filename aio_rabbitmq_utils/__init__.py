@@ -2,7 +2,7 @@ from .base_device import RabbitMQBaseDevice, RabbitMQBaseInputDevice, RabbitMQBa
 from .base_device_manager import RabbitMQBaseDeviceManager, RabbitMQBaseInputDeviceManager, \
     RabbitMQBaseOutputDeviceManager
 from .consume_input_device_manager import RabbitMQConsumeInputDeviceManager
-from .create_queue import create_queue
+from .create_queue import declare_queue
 from .device_manager import RabbitMQDeviceManager
 from .input_consume_device import RabbitMQInputConsumeDevice
 from .input_device import RabbitMQInputBasicGetDevice

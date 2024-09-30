@@ -8,7 +8,7 @@ from aio_pika.connection import make_url
 from aio_pika.pool import Pool
 from pamqp.constants import DEFAULT_PORT
 
-from rabbitmq_utils.device_manager import RabbitMQDeviceManager
+from .device_manager import RabbitMQDeviceManager
 
 
 class RabbitMQMultiConnectionDeviceManager(RabbitMQDeviceManager, ABC):

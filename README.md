@@ -2,8 +2,9 @@
 
 ### Example for reader
 #### Consumer
+
 ```python
-from rabbitmq_utils import RabbitMQConsumeInputDeviceManager, RabbitMQInputConsumeDevice
+from aio_rabbitmq_utils import RabbitMQConsumeInputDeviceManager, RabbitMQInputConsumeDevice
 
 
 async def example():
@@ -26,8 +27,9 @@ async def example():
     await transaction.rollback()
 ```
 #### Basic Get
+
 ```python
-from rabbitmq_utils import RabbitMQMultiConnectionBasicGetInputDeviceManager, RabbitMQInputBasicGetDevice
+from aio_rabbitmq_utils import RabbitMQMultiConnectionBasicGetInputDeviceManager, RabbitMQInputBasicGetDevice
 
 
 async def example():
@@ -53,9 +55,10 @@ async def example():
 ```
 
 ### Example for writer
+
 ```python
 from io import BytesIO
-from rabbitmq_utils import RabbitMQOutputDeviceManager, RabbitMQOutputDevice
+from aio_rabbitmq_utils import RabbitMQOutputDeviceManager, RabbitMQOutputDevice
 
 
 async def example():

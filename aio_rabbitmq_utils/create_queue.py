@@ -2,7 +2,7 @@ from typing import Dict, Union, List
 
 from aio_pika.abc import AbstractQueue
 
-from rabbitmq_utils import RabbitMQDeviceManager
+from .device_manager import RabbitMQDeviceManager
 
 
 async def declare_queue(

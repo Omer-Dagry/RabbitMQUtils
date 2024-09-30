@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from rabbitmq_utils.base_device import RabbitMQBaseDevice, RabbitMQBaseInputDevice, RabbitMQBaseOutputDevice
+from .base_device import RabbitMQBaseDevice, RabbitMQBaseInputDevice, RabbitMQBaseOutputDevice
 
 
 class RabbitMQBaseDeviceManager(ABC):

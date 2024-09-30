@@ -5,8 +5,8 @@ from aio_pika import DeliveryMode, RobustExchange, Message
 from aio_pika.abc import HeadersType
 from pamqp.commands import Basic
 
-from rabbitmq_utils.base_device import RabbitMQBaseOutputDevice
-from rabbitmq_utils.device_manager import RabbitMQDeviceManager
+from .base_device import RabbitMQBaseOutputDevice
+from .device_manager import RabbitMQDeviceManager
 
 
 class RabbitMQOutputDevice(RabbitMQBaseOutputDevice):

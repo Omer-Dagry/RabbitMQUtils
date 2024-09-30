@@ -4,9 +4,9 @@ from typing import Optional, Tuple, List
 from aio_pika.abc import HeadersType, AbstractIncomingMessage
 from pamqp.common import Arguments
 
-from rabbitmq_utils.base_device import RabbitMQBaseInputDevice
-from rabbitmq_utils.device_manager import RabbitMQDeviceManager
-from rabbitmq_utils.transaction import BaseTransaction, RabbitMQIncomingMessageTransaction, EmptyTransaction
+from .base_device import RabbitMQBaseInputDevice
+from .device_manager import RabbitMQDeviceManager
+from .transaction import BaseTransaction, RabbitMQIncomingMessageTransaction, EmptyTransaction
 
 
 class RabbitMQInputConsumeDevice(RabbitMQBaseInputDevice):
