@@ -13,6 +13,7 @@ async def example():
         user="user",
         password="password",
         vhost="/",
+        prefetch_count=10,
     )
     await input_device_manager.connect()
     input_device: RabbitMQInputConsumeDevice = await input_device_manager.get_device("some_queue_name")
@@ -67,7 +68,6 @@ async def example():
         user="user",
         password="password",
         vhost="/",
-        publisher_confirms=True,
         exchange_name="",
     )
     await output_device_manager.connect()
