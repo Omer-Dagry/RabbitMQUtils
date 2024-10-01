@@ -1,6 +1,7 @@
 from io import BytesIO
 from typing import Optional, Tuple
 
+import aio_pika
 from aio_pika.abc import HeadersType
 
 from .base_device import RabbitMQBaseInputDevice
@@ -25,7 +26,11 @@ class RabbitMQInputBasicGetDevice(RabbitMQBaseInputDevice):
         async with (await self._device_manager.channel).acquire() as channel:
             queue = await channel.get_queue(self._device_name)
 
-            incoming_message = await queue.get(no_ack=not self._use_transaction)
+            try:
+                incoming_message = await queue.get(no_ack=not self._use_transaction)
+            except aio_pika.exceptions.QueueEmpty:
+                return None
+
             if not incoming_message:
                 return None
 

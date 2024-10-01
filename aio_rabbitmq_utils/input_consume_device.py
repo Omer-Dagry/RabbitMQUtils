@@ -1,7 +1,7 @@
 from io import BytesIO
 from typing import Optional, Tuple, List
 
-from aio_pika.abc import HeadersType, AbstractIncomingMessage
+from aio_pika.abc import HeadersType, AbstractIncomingMessage, ConsumerTag
 from pamqp.common import Arguments
 
 from .base_device import RabbitMQBaseInputDevice
@@ -22,6 +22,7 @@ class RabbitMQInputConsumeDevice(RabbitMQBaseInputDevice):
         self._use_transaction = use_transaction
         self._consumer_arguments = consumer_arguments
 
+        self._consumer_tag: Optional[ConsumerTag] = None
         self._inner_queue: List[Tuple[BytesIO, HeadersType, BaseTransaction]] = []
 
     async def _inner_consume(
@@ -41,8 +42,9 @@ class RabbitMQInputConsumeDevice(RabbitMQBaseInputDevice):
 
     async def connect(self) -> None:
         queue = await (await self._device_manager.channel).get_queue(self._device_name)
-        await queue.consume(
+        self._consumer_tag = await queue.consume(
             self._inner_consume,
+            no_ack=not self._use_transaction,
             arguments=self._consumer_arguments
         )
 
@@ -53,3 +55,5 @@ class RabbitMQInputConsumeDevice(RabbitMQBaseInputDevice):
             except:
                 pass
         self._inner_queue = []
+        queue = await (await self._device_manager.channel).get_queue(self._device_name)
+        await queue.cancel(self._consumer_tag)
