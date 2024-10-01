@@ -29,7 +29,7 @@ class RabbitMQConsumeInputDeviceManager(
             user=user,
             password=password,
             vhost=vhost,
-            publisher_confirms=False,
+            publisher_confirms=True,
             channel_qos_kwargs=dict(prefetch_count=prefetch_count),
             use_transaction=use_transaction,
             use_ssl=use_ssl,
