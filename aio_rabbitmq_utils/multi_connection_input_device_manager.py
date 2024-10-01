@@ -20,7 +20,7 @@ class RabbitMQMultiConnectionBasicGetInputDeviceManager(
             max_connections: int,
             max_channels: int,
             channel_qos_kwargs: Dict[str, Any] = None,
-            use_transaction: bool = False,
+            use_transaction: bool = True,
             use_ssl: bool = False,
             port: int = DEFAULT_PORT,
     ):
