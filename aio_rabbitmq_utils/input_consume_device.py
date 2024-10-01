@@ -1,7 +1,9 @@
+from collections import deque
 from io import BytesIO
-from typing import Optional, Tuple, List
+from typing import Optional, Tuple, Deque
 
-from aio_pika.abc import HeadersType, AbstractIncomingMessage
+from aio_pika import RobustQueue
+from aio_pika.abc import HeadersType, AbstractIncomingMessage, ConsumerTag
 from pamqp.common import Arguments
 
 from .base_device import RabbitMQBaseInputDevice
@@ -22,7 +24,15 @@ class RabbitMQInputConsumeDevice(RabbitMQBaseInputDevice):
         self._use_transaction = use_transaction
         self._consumer_arguments = consumer_arguments
 
-        self._inner_queue: List[Tuple[BytesIO, HeadersType, BaseTransaction]] = []
+        self._queue: Optional[RobustQueue] = None
+        self._consumer_tag: Optional[ConsumerTag] = None
+        self._inner_queue: Deque[Tuple[BytesIO, HeadersType, BaseTransaction]] = deque([])
+
+    @property
+    async def queue(self) -> RobustQueue:
+        if self._queue is None or self._queue.channel.is_closed:
+            self._queue = await (await self._device_manager.channel).get_queue(self._device_name)
+        return self._queue
 
     async def _inner_consume(
             self,
@@ -36,13 +46,13 @@ class RabbitMQInputConsumeDevice(RabbitMQBaseInputDevice):
             self,
     ) -> Optional[Tuple[BytesIO, HeadersType, BaseTransaction]]:
         if self._inner_queue:
-            return self._inner_queue.pop(0)
+            return self._inner_queue.popleft()
         return None
 
     async def connect(self) -> None:
-        queue = await (await self._device_manager.channel).get_queue(self._device_name)
-        await queue.consume(
+        self._consumer_tag = await (await self.queue).consume(
             self._inner_consume,
+            no_ack=not self._use_transaction,
             arguments=self._consumer_arguments
         )
 
@@ -53,3 +63,4 @@ class RabbitMQInputConsumeDevice(RabbitMQBaseInputDevice):
             except:
                 pass
         self._inner_queue = []
+        await (await self.queue).cancel(self._consumer_tag)
