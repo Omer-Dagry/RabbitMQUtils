@@ -20,7 +20,7 @@ class RabbitMQConsumeInputDeviceManager(
             vhost: str,
             prefetch_count: int,
             consumer_arguments: Arguments = None,
-            use_transaction: bool = False,
+            use_transaction: bool = True,
             use_ssl: bool = False,
             port: int = DEFAULT_PORT,
     ):
