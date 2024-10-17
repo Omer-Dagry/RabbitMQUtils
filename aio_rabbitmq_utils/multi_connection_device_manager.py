@@ -6,6 +6,7 @@ from aio_pika import connect_robust
 from aio_pika.abc import AbstractRobustConnection, AbstractRobustChannel
 from aio_pika.connection import make_url
 from aio_pika.pool import Pool
+from no_exception import NoException
 from pamqp.constants import DEFAULT_PORT
 
 from .device_manager import RabbitMQDeviceManager
@@ -82,13 +83,9 @@ class RabbitMQMultiConnectionDeviceManager(RabbitMQDeviceManager, ABC):
         )
 
     async def _close_connection(self) -> None:
-        try:
+        with NoException():
             await self._connection.close()
-        except:
-            pass
 
     async def _close_channel(self) -> None:
-        try:
+        with NoException():
             await self._channel.close()
-        except:
-            pass

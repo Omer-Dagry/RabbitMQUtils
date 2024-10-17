@@ -1,2 +1,3 @@
 setuptools==75.*
 aio-pika==9.*
+no-exception==1.*

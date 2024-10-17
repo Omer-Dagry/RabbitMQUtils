@@ -24,6 +24,19 @@ class RabbitMQBaseInputDevice(RabbitMQBaseDevice, ABC):
     ) -> Optional[Tuple[BytesIO, HeadersType, BaseTransaction]]:
         raise NotImplemented
 
+    @abstractmethod
+    async def commit_all_messages(self) -> None:
+        raise NotImplemented
+
+    @abstractmethod
+    async def rollback_all_messages(self) -> None:
+        raise NotImplemented
+
+    @property
+    @abstractmethod
+    def has_messages_available(self) -> bool:
+        raise NotImplemented
+
 
 class RabbitMQBaseOutputDevice(RabbitMQBaseDevice, ABC):
     @abstractmethod

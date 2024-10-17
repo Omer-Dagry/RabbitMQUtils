@@ -5,6 +5,7 @@ from typing import Optional, List, Any, Dict
 from aio_pika import connect_robust
 from aio_pika.abc import AbstractRobustConnection, AbstractRobustChannel
 from aio_pika.connection import make_url
+from no_exception import NoException
 from pamqp.constants import DEFAULT_PORT
 
 from .base_device_manager import RabbitMQBaseDeviceManager
@@ -84,13 +85,9 @@ class RabbitMQDeviceManager(RabbitMQBaseDeviceManager, ABC):
         )
 
     async def _close_connection(self) -> None:
-        try:
+        with NoException():
             await self._connection.close()
-        except:
-            pass
 
     async def _close_channel(self) -> None:
-        try:
+        with NoException():
             await self._channel.close()
-        except:
-            pass
