@@ -37,14 +37,17 @@ class RabbitMQOutputDevice(RabbitMQBaseOutputDevice):
             headers: Optional[HeadersType] = None,
             delivery_mode: DeliveryMode = DeliveryMode.PERSISTENT
     ) -> bool:
-        return await (await self.exchange).publish(
-            Message(
-                body=stream.read(),
-                headers=headers,
-                delivery_mode=delivery_mode,
+        return isinstance(
+            await (await self.exchange).publish(
+                Message(
+                    body=stream.read(),
+                    headers=headers,
+                    delivery_mode=delivery_mode,
+                ),
+                routing_key=self._device_name,
             ),
-            routing_key=self._device_name,
-        ) == Basic.Ack
+            Basic.Ack
+        )
 
     async def connect(self) -> None:
         self._exchange = await self.exchange

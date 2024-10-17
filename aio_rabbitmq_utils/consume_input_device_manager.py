@@ -1,4 +1,7 @@
-from typing import Dict, Any, List
+import asyncio
+import threading
+from asyncio import Future
+from typing import List, TypeVar, Awaitable
 
 from pamqp.common import Arguments
 from pamqp.constants import DEFAULT_PORT
@@ -6,6 +9,8 @@ from pamqp.constants import DEFAULT_PORT
 from .base_device_manager import RabbitMQBaseInputDeviceManager
 from .device_manager import RabbitMQDeviceManager
 from .input_consume_device import RabbitMQInputConsumeDevice
+
+T = TypeVar('T')
 
 
 class RabbitMQConsumeInputDeviceManager(
@@ -36,6 +41,13 @@ class RabbitMQConsumeInputDeviceManager(
             port=port,
         )
         self._consumer_arguments = consumer_arguments
+
+        self._loop = asyncio.new_event_loop()
+        self._thread_loop = threading.Thread(target=self._loop.run_forever)
+        self._thread_loop.start()
+
+    def run_in_executor(self, coro: Future[T] | Awaitable[T]) -> T:
+        return asyncio.run_coroutine_threadsafe(coro, self._loop).result()
 
     async def get_device(
             self,
