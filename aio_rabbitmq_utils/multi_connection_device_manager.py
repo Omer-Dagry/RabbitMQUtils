@@ -1,9 +1,9 @@
 import random
 from abc import ABC
-from typing import Optional, List, Any, Dict
+from typing import Dict, List, Optional
 
 from aio_pika import connect_robust
-from aio_pika.abc import AbstractRobustConnection, AbstractRobustChannel
+from aio_pika.abc import AbstractRobustChannel, AbstractRobustConnection
 from aio_pika.connection import make_url
 from aio_pika.pool import Pool
 from no_exception import NoException
@@ -14,18 +14,18 @@ from .device_manager import RabbitMQDeviceManager
 
 class RabbitMQMultiConnectionDeviceManager(RabbitMQDeviceManager, ABC):
     def __init__(
-            self,
-            hosts: List[str],
-            user: str,
-            password: str,
-            vhost: str,
-            publisher_confirms: bool,
-            max_connections: int,
-            max_channels: int,
-            channel_qos_kwargs: Dict[str, Any] = None,
-            use_transaction: bool = False,
-            use_ssl: bool = False,
-            port: int = DEFAULT_PORT,
+        self,
+        hosts: List[str],
+        user: str,
+        password: str,
+        vhost: str,
+        publisher_confirms: bool,
+        max_connections: int,
+        max_channels: int,
+        channel_qos_kwargs: Dict[str, int | float | bool | None] = None,
+        use_transaction: bool = False,
+        use_ssl: bool = False,
+        port: int = DEFAULT_PORT,
     ):
         super().__init__(
             hosts=hosts,
@@ -63,7 +63,7 @@ class RabbitMQMultiConnectionDeviceManager(RabbitMQDeviceManager, ABC):
                 virtualhost=self._vhost,
                 ssl=self._use_ssl,
             ),
-            max_size=self._max_connections
+            max_size=self._max_connections,
         )
 
     async def _create_channel(self) -> None:
@@ -72,14 +72,12 @@ class RabbitMQMultiConnectionDeviceManager(RabbitMQDeviceManager, ABC):
                 channel = await connection.channel(
                     publisher_confirms=self._publisher_confirms,
                 )
-                await channel.set_qos(
-                    **self._channel_qos_kwargs,
-                )
+                await channel.set_qos(**self._channel_qos_kwargs)
                 return channel
 
         self._channel = Pool(
             inner_create_channel,
-            max_size=self._max_channels
+            max_size=self._max_channels,
         )
 
     async def _close_connection(self) -> None:

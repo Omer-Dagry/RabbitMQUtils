@@ -1,9 +1,9 @@
 import random
 from abc import ABC
-from typing import Optional, List, Any, Dict
+from typing import Dict, List, Optional
 
 from aio_pika import connect_robust
-from aio_pika.abc import AbstractRobustConnection, AbstractRobustChannel
+from aio_pika.abc import AbstractRobustChannel, AbstractRobustConnection
 from aio_pika.connection import make_url
 from no_exception import NoException
 from pamqp.constants import DEFAULT_PORT
@@ -13,16 +13,16 @@ from .base_device_manager import RabbitMQBaseDeviceManager
 
 class RabbitMQDeviceManager(RabbitMQBaseDeviceManager, ABC):
     def __init__(
-            self,
-            hosts: List[str],
-            user: str,
-            password: str,
-            vhost: str,
-            publisher_confirms: bool,
-            channel_qos_kwargs: Dict[str, Any] = None,
-            use_transaction: bool = False,
-            use_ssl: bool = False,
-            port: int = DEFAULT_PORT,
+        self,
+        hosts: List[str],
+        user: str,
+        password: str,
+        vhost: str,
+        publisher_confirms: bool,
+        channel_qos_kwargs: Dict[str, int | float | bool | None] = None,
+        use_transaction: bool = False,
+        use_ssl: bool = False,
+        port: int = DEFAULT_PORT,
     ):
         self._hosts = hosts
         self._user = user
@@ -80,9 +80,7 @@ class RabbitMQDeviceManager(RabbitMQBaseDeviceManager, ABC):
         self._channel = await self._connection.channel(
             self._publisher_confirms,
         )
-        await self._channel.set_qos(
-            **self._channel_qos_kwargs,
-        )
+        await self._channel.set_qos(**self._channel_qos_kwargs)
 
     async def _close_connection(self) -> None:
         with NoException():

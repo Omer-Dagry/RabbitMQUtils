@@ -14,8 +14,8 @@ class RabbitMQBaseDeviceManager(ABC):
 
     @abstractmethod
     async def get_device(
-            self,
-            device_name: str,
+        self,
+        device_name: str,
     ) -> RabbitMQBaseDevice:
         raise NotImplemented
 
@@ -23,8 +23,8 @@ class RabbitMQBaseDeviceManager(ABC):
 class RabbitMQBaseInputDeviceManager(RabbitMQBaseDeviceManager):
     @abstractmethod
     async def get_device(
-            self,
-            device_name: str,
+        self,
+        device_name: str,
     ) -> RabbitMQBaseInputDevice:
         raise NotImplemented
 
@@ -32,7 +32,7 @@ class RabbitMQBaseInputDeviceManager(RabbitMQBaseDeviceManager):
 class RabbitMQBaseOutputDeviceManager(RabbitMQBaseDeviceManager):
     @abstractmethod
     async def get_device(
-            self,
-            device_name: str,
+        self,
+        device_name: str,
     ) -> RabbitMQBaseOutputDevice:
         raise NotImplemented

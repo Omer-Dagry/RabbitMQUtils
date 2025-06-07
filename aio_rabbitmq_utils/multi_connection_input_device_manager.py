@@ -1,4 +1,4 @@
-from typing import Dict, Any, List
+from typing import Dict, List
 
 from pamqp.constants import DEFAULT_PORT
 
@@ -12,17 +12,17 @@ class RabbitMQMultiConnectionBasicGetInputDeviceManager(
     RabbitMQBaseInputDeviceManager,
 ):
     def __init__(
-            self,
-            hosts: List[str],
-            user: str,
-            password: str,
-            vhost: str,
-            max_connections: int,
-            max_channels: int,
-            channel_qos_kwargs: Dict[str, Any] = None,
-            use_transaction: bool = True,
-            use_ssl: bool = False,
-            port: int = DEFAULT_PORT,
+        self,
+        hosts: List[str],
+        user: str,
+        password: str,
+        vhost: str,
+        max_connections: int,
+        max_channels: int,
+        channel_qos_kwargs: Dict[str, int | float | bool | None] = None,
+        use_transaction: bool = True,
+        use_ssl: bool = False,
+        port: int = DEFAULT_PORT,
     ):
         super().__init__(
             hosts=hosts,
@@ -39,11 +39,12 @@ class RabbitMQMultiConnectionBasicGetInputDeviceManager(
         )
 
     async def get_device(
-            self,
-            device_name: str,
+        self,
+        device_name: str,
     ) -> RabbitMQInputBasicGetDevice:
         return RabbitMQInputBasicGetDevice(
             self,
             device_name,
             self._use_transaction,
+            self._max_channels,
         )
