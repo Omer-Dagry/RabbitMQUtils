@@ -85,7 +85,7 @@ class RabbitMQInputConsumeDevice(RabbitMQBaseInputDevice):
                 if self._use_transaction:
                     self._max_delivery_tag = max(
                         transaction._incoming_message.delivery_tag,
-                        self._max_delivery_tag,
+                        self._max_delivery_tag or 0,
                     )
                 return data, headers, transaction
             except IndexError:
