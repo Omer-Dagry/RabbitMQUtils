@@ -10,4 +10,4 @@ from .multi_connection_device_manager import RabbitMQMultiConnectionDeviceManage
 from .multi_connection_input_device_manager import RabbitMQMultiConnectionBasicGetInputDeviceManager
 from .output_device import RabbitMQOutputDevice
 from .output_device_manager import RabbitMQOutputDeviceManager
-from .transaction import BaseTransaction, RabbitMQIncomingMessageTransaction, EmptyTransaction
+from .transaction import BaseTransaction, EmptyTransaction, RabbitMQIncomingMessageTransaction

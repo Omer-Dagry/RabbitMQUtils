@@ -1,7 +1,7 @@
 from io import BytesIO
 from typing import Optional
 
-from aio_pika import DeliveryMode, RobustExchange, Message
+from aio_pika import DeliveryMode, Message, RobustExchange
 from aio_pika.abc import HeadersType
 from pamqp.commands import Basic
 
@@ -11,10 +11,10 @@ from .device_manager import RabbitMQDeviceManager
 
 class RabbitMQOutputDevice(RabbitMQBaseOutputDevice):
     def __init__(
-            self,
-            device_manager: RabbitMQDeviceManager,
-            device_name: str,
-            exchange_name: str,
+        self,
+        device_manager: RabbitMQDeviceManager,
+        device_name: str,
+        exchange_name: str,
     ):
         self._device_manager = device_manager
         self._device_name = device_name
@@ -32,10 +32,10 @@ class RabbitMQOutputDevice(RabbitMQBaseOutputDevice):
         return self._exchange
 
     async def send(
-            self,
-            stream: BytesIO,
-            headers: Optional[HeadersType] = None,
-            delivery_mode: DeliveryMode = DeliveryMode.PERSISTENT
+        self,
+        stream: BytesIO,
+        headers: Optional[HeadersType] = None,
+        delivery_mode: DeliveryMode = DeliveryMode.PERSISTENT,
     ) -> bool:
         return isinstance(
             await (await self.exchange).publish(
@@ -46,7 +46,7 @@ class RabbitMQOutputDevice(RabbitMQBaseOutputDevice):
                 ),
                 routing_key=self._device_name,
             ),
-            Basic.Ack
+            Basic.Ack,
         )
 
     async def connect(self) -> None:

@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from io import BytesIO
 from typing import Optional, Tuple
 
-from aio_pika.abc import HeadersType, DeliveryMode
+from aio_pika.abc import DeliveryMode, HeadersType
 
 from .transaction import BaseTransaction
 
@@ -20,7 +20,7 @@ class RabbitMQBaseDevice(ABC):
 class RabbitMQBaseInputDevice(RabbitMQBaseDevice, ABC):
     @abstractmethod
     async def read(
-            self,
+        self,
     ) -> Optional[Tuple[BytesIO, HeadersType, BaseTransaction]]:
         raise NotImplemented
 
@@ -41,9 +41,9 @@ class RabbitMQBaseInputDevice(RabbitMQBaseDevice, ABC):
 class RabbitMQBaseOutputDevice(RabbitMQBaseDevice, ABC):
     @abstractmethod
     async def send(
-            self,
-            stream: BytesIO,
-            headers: Optional[HeadersType] = None,
-            delivery_mode: DeliveryMode = DeliveryMode.PERSISTENT,
+        self,
+        stream: BytesIO,
+        headers: Optional[HeadersType] = None,
+        delivery_mode: DeliveryMode = DeliveryMode.PERSISTENT,
     ) -> bool:
         raise NotImplemented
