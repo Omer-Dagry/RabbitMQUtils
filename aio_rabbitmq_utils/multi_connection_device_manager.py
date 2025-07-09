@@ -24,8 +24,8 @@ class RabbitMQMultiConnectionDeviceManager(RabbitMQDeviceManager, ABC):
         max_channels: int,
         channel_qos_kwargs: Dict[str, int | float | bool | None] = None,
         use_transaction: bool = False,
-        use_ssl: bool = False,
-        port: int = DEFAULT_PORT,
+        use_ssl: bool = True,
+        port: int = None,
     ):
         super().__init__(
             hosts=hosts,

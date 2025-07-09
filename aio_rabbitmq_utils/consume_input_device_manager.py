@@ -23,8 +23,8 @@ class RabbitMQConsumeInputDeviceManager(
         prefetch_count: int,
         consumer_arguments: Arguments = None,
         use_transaction: bool = True,
-        use_ssl: bool = False,
-        port: int = DEFAULT_PORT,
+        use_ssl: bool = True,
+        port: int = None,
     ):
         super().__init__(
             hosts=hosts,

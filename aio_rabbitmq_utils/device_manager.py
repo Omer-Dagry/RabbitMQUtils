@@ -5,6 +5,7 @@ from typing import Dict, List, Optional
 from aio_pika import connect_robust
 from aio_pika.abc import AbstractRobustChannel, AbstractRobustConnection
 from aio_pika.connection import make_url
+from aiormq.connection import DEFAULT_PORTS
 from no_exception import NoException
 from pamqp.constants import DEFAULT_PORT
 
@@ -21,8 +22,8 @@ class RabbitMQDeviceManager(RabbitMQBaseDeviceManager, ABC):
         publisher_confirms: bool,
         channel_qos_kwargs: Dict[str, int | float | bool | None] = None,
         use_transaction: bool = False,
-        use_ssl: bool = False,
-        port: int = DEFAULT_PORT,
+        use_ssl: bool = True,
+        port: int = None,
     ):
         self._hosts = hosts
         self._user = user
@@ -32,7 +33,7 @@ class RabbitMQDeviceManager(RabbitMQBaseDeviceManager, ABC):
         self._channel_qos_kwargs = channel_qos_kwargs or {}
         self._use_transaction = use_transaction
         self._use_ssl = use_ssl
-        self._port = port
+        self._port = port or (DEFAULT_PORTS["amqps"] if use_ssl else DEFAULT_PORTS["amqp"])
 
         self._connection: Optional[AbstractRobustConnection] = None
         self._channel: Optional[AbstractRobustChannel] = None
