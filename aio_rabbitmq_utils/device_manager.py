@@ -5,6 +5,7 @@ from typing import Dict, List, Optional
 from aio_pika import connect_robust
 from aio_pika.abc import AbstractRobustChannel, AbstractRobustConnection
 from aio_pika.connection import make_url
+from aio_pika.pool import Pool
 from aiormq.connection import DEFAULT_PORTS
 from no_exception import NoException
 from pamqp.constants import DEFAULT_PORT
@@ -35,8 +36,8 @@ class RabbitMQDeviceManager(RabbitMQBaseDeviceManager, ABC):
         self._use_ssl = use_ssl
         self._port = port or (DEFAULT_PORTS["amqps"] if use_ssl else DEFAULT_PORTS["amqp"])
 
-        self._connection: Optional[AbstractRobustConnection] = None
-        self._channel: Optional[AbstractRobustChannel] = None
+        self._connection: Optional[AbstractRobustConnection | Pool[AbstractRobustConnection]] = None
+        self._channel: Optional[AbstractRobustChannel | Pool[AbstractRobustChannel]] = None
 
     async def connect(self) -> None:
         if self._connection is None or self._connection.is_closed or \
@@ -48,13 +49,13 @@ class RabbitMQDeviceManager(RabbitMQBaseDeviceManager, ABC):
         await self._close_connection()
 
     @property
-    async def connection(self) -> AbstractRobustConnection:
+    async def connection(self) -> AbstractRobustConnection | Pool[AbstractRobustConnection]:
         if self._connection is None or self._connection.is_closed:
             await self._reconnect()
         return self._connection
 
     @property
-    async def channel(self) -> AbstractRobustChannel:
+    async def channel(self) -> AbstractRobustChannel | Pool[AbstractRobustChannel]:
         if self._channel is None or self._channel.is_closed:
             await self._reconnect()
         return self._channel
@@ -78,6 +79,9 @@ class RabbitMQDeviceManager(RabbitMQBaseDeviceManager, ABC):
         )
 
     async def _create_channel(self) -> None:
+        if not self._connection or self._connection.is_closed:
+            await self._create_connection()
+
         self._channel = await self._connection.channel(
             self._publisher_confirms,
         )

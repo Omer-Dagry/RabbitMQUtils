@@ -53,7 +53,7 @@ class RabbitMQMultiConnectionDeviceManager(RabbitMQDeviceManager, ABC):
         return await super().channel
 
     async def _create_connection(self) -> None:
-        self._connection = Pool(
+        self._connection: Pool[AbstractRobustConnection] = Pool(
             connect_robust,
             make_url(
                 host=random.choice(self._hosts),
@@ -75,7 +75,7 @@ class RabbitMQMultiConnectionDeviceManager(RabbitMQDeviceManager, ABC):
                 await channel.set_qos(**self._channel_qos_kwargs)
                 return channel
 
-        self._channel = Pool(
+        self._channel: Pool[AbstractRobustChannel] = Pool(
             inner_create_channel,
             max_size=self._max_channels,
         )
